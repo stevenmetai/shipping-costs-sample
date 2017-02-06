@@ -6,6 +6,7 @@ import os
 
 from flask import Flask
 from flask import request
+from flask import redirect
 from flask import make_response
 
 # Flask app should start in global layout
@@ -19,7 +20,9 @@ def hello_world():
 @app.route('/auth')
 def auth():
     print("AUTH!!!")
-    return "OK"
+    redirectUri = request.args.get("redirect_uri")
+    print redirectUri
+    return redirect(redirectUri)
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
