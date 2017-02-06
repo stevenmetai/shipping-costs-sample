@@ -11,6 +11,15 @@ from flask import make_response
 # Flask app should start in global layout
 app = Flask(__name__)
 
+@app.route('/')
+def hello_world():
+    print("Hi man")
+    return "HELLO"
+
+@app.route('/auth')
+def auth():
+    print("AUTH!!!")
+    return "OK"
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
@@ -56,4 +65,4 @@ if __name__ == '__main__':
 
     print "Starting app on port %d" % port
 
-    app.run(debug=True, port=port, host='0.0.0.0')
+    app.run(debug=True, port=port, host='127.0.0.1')
