@@ -31,25 +31,24 @@ def webhook():
     print("Request:")
     print(json.dumps(req, indent=4))
 
-    #res = makeWebhookResult(req)
+    res = makeWebhookResult(req)
 
-    #res = json.dumps(res, indent=4)
-    #print(res)
-    #r = make_response(res)
-    r = make_response("hi")
+    res = json.dumps(res, indent=4)
+    print(res)
+    r = make_response(res)
     r.headers['Content-Type'] = 'application/json'
     return r
 
 def makeWebhookResult(req):
-    if req.get("result").get("action") != "shipping.cost":
+    if req.get("result").get("action") != "play-action":
         return {}
     result = req.get("result")
     parameters = result.get("parameters")
-    zone = parameters.get("shipping-zone")
+    channelnumber = parameters.get("channelNumber")
 
-    cost = {'Europe':100, 'North America':200, 'South America':300, 'Asia':400, 'Africa':500}
+    #cost = {'Europe':100, 'North America':200, 'South America':300, 'Asia':400, 'Africa':500}
 
-    speech = "The cost of shipping to " + zone + " is " + str(cost[zone]) + " euros."
+    speech = "The channel " + channelnumber + " starts to play"
 
     print("Response:")
     print(speech)
@@ -59,7 +58,7 @@ def makeWebhookResult(req):
         "displayText": speech,
         #"data": {},
         # "contextOut": [],
-        "source": "apiai-onlinestore-shipping"
+        "source": "apiai-videotraytester"
     }
 
 
