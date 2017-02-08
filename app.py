@@ -40,15 +40,20 @@ def webhook():
     return r
 
 def makeWebhookResult(req):
-    if req.get("result").get("action") != "play-action":
+    if req.get("result").get("action") == "play-action":
+        result = req.get("result")
+        parameters = result.get("parameters")
+        channelnumber = parameters.get("channelNumber")
+        speech = "The channel " + channelnumber + " starts to play"
+    elif req.get("result").get("action") == "volume-action":
+        result = req.get("result")
+        parameters = result.get("parameters")
+        volumetype = parameters.get("volume-type")
+        speech = volumetype + "the volume"
+    else:
         return {}
-    result = req.get("result")
-    parameters = result.get("parameters")
-    channelnumber = parameters.get("channelNumber")
-
     #cost = {'Europe':100, 'North America':200, 'South America':300, 'Asia':400, 'Africa':500}
 
-    speech = "The channel " + channelnumber + " starts to play"
 
     print("Response:")
     print(speech)
