@@ -11,6 +11,7 @@ from oauth2client import client
 
 # Flask app should start in global layout
 app = flask.Flask(__name__)
+app.secret_key = 'super secret key'
 
 @app.route('/index')
 def index():
