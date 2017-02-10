@@ -22,10 +22,10 @@ def index():
         return flask.redirect(flask.url_for('oauth2callback'))
     else:
         http_auth = credentials.authorize(httplib2.Http())
-        print "http_auth : "+http_auth
         user_info_service = discovery.build(
             serviceName='oauth2', version='v2',
-            http=credentials.authorize(http_auth))
+            http=http_auth)
+        print "user_info_service = " + user_info_service
         #user_info = user_info_service.userinfo().get().execute()
         #if user_info and user_info.get('id'):
         return user_info_service
