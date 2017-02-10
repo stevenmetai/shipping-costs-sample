@@ -33,7 +33,7 @@ def oauth2callback():
     flow = client.flow_from_clientsecrets(
         'client_secret_1070580814571-0rr6m54mdtes4fe3lp1t99bvlqgllvg6.apps.googleusercontent.com.json',
         scope='email',
-        redirect_uri=flask.url_for('oauth2callback', _external=True))
+        redirect_uri=flask.url_for('oauth2callback', _external=True, _scheme='https'))
     if 'code' not in flask.request.args:
       auth_uri = flow.step1_get_authorize_url()
       return flask.redirect(auth_uri)
