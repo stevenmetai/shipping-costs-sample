@@ -4,29 +4,49 @@ import urllib
 import json
 import os
 
-from flask import Flask
-from flask import request
-from flask import redirect
-from flask import make_response
+import flask
+import httplib2
+from apiclient import discovery
+from oauth2client import client
 
 # Flask app should start in global layout
-app = Flask(__name__)
+app = flask.Flask(__name__)
 
-@app.route('/')
-def hello_world():
-    print("Hi man")
-    return "HELLO"
+@app.route('/index')
+def index():
+    if 'credentials' not in flask.session:
+        return flask.redirect(flask.url_for('oauth2callback'))
+    credentials = client.OAuth2Credentials.from_json(flask.session['credentials'])
+    if credentials.access_token_expired:
+        return flask.redirect(flask.url_for('oauth2callback'))
+    else:
+        http_auth = credentials.authorize(httplib2.Http())
+        user_info_service = discovery.build(
+            serviceName='oauth2', version='v2',
+            http=credentials.authorize(http_auth))
+        #user_info = user_info_service.userinfo().get().execute()
+        #if user_info and user_info.get('id'):
+        return json.dumps(user_info_service)
 
-@app.route('/auth')
-def auth():
-    print("AUTH!!!")
-    redirectUri = request.args.get("redirect_uri")
-    print redirectUri
-    return redirect(redirectUri)
+@app.route('/oauth2callback')
+def oauth2callback():
+    flow = client.flow_from_clientsecrets(
+        'client_secret_1070580814571-0rr6m54mdtes4fe3lp1t99bvlqgllvg6.apps.googleusercontent.com.json',
+        scope='email',
+        redirect_uri=flask.url_for('oauth2callback', _external=True),
+        include_granted_scopes=True)
+    if 'code' not in flask.request.args:
+      auth_uri = flow.step1_get_authorize_url()
+      return flask.redirect(auth_uri)
+    else:
+      auth_code = flask.request.args.get('code')
+      credentials = flow.step2_exchange(auth_code)
+      flask.session['credentials'] = credentials.to_json()
+      return flask.redirect(flask.url_for('index'))
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
-    req = request.get_json(silent=True, force=True)
+    req = flask.request.get_json(silent=True, force=True)
 
     print("Request:")
     print(json.dumps(req, indent=4))
@@ -35,7 +55,7 @@ def webhook():
 
     res = json.dumps(res, indent=4)
     print(res)
-    r = make_response(res)
+    r = flask.make_response(res)
     r.headers['Content-Type'] = 'application/json'
     return r
 
@@ -49,7 +69,7 @@ def makeWebhookResult(req):
         result = req.get("result")
         parameters = result.get("parameters")
         volumetype = parameters.get("volume-type")
-        speech = volumetype + "the volume"
+        speech = "OK, "+ volumetype + " the volume"
     else:
         return {}
     #cost = {'Europe':100, 'North America':200, 'South America':300, 'Asia':400, 'Africa':500}
