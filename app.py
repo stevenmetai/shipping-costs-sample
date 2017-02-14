@@ -22,13 +22,15 @@ def index():
         return flask.redirect(flask.url_for('oauth2callback'))
     else:
         http_auth = credentials.authorize(httplib2.Http())
+        print "ACCESS_TOKEN : " +credentials.access_token
         ##user_info_service = discovery.build(
         ##    serviceName='email', version='v1',
         ##    http=http_auth)
         #user_info = user_info_service.userinfo().get().execute()
         #if user_info and user_info.get('id'):
         email = credentials.id_token['email']
-        return email
+        print "Email : " + email
+        return flask.redirect(flask.url_for("https://google.com", result_code="SUCCESS"))
 
 @app.route('/oauth2callback')
 def oauth2callback():
