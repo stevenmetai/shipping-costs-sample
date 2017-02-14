@@ -30,7 +30,7 @@ def index():
         #if user_info and user_info.get('id'):
         email = credentials.id_token['email']
         print "Email : " + email
-        return flask.redirect(flask.url_for("https://google.com", result_code="SUCCESS"))
+        return flask.redirect("https://www.google.com?result_code=SUCCESS", code=302)
 
 @app.route('/oauth2callback')
 def oauth2callback():
