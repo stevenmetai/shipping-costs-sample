@@ -8,10 +8,20 @@ import flask
 import httplib2
 from apiclient import discovery
 from oauth2client import client
+from pubnub.pnconfiguration import PNConfiguration
+from pubnub.pubnub import PubNub
 
 # Flask app should start in global layout
 app = flask.Flask(__name__)
 app.secret_key = 'super secret key'
+
+pnconfig = PNConfiguration()
+
+pnconfig.subscribe_key = 'sub-c-79baf02c-29d0-11e5-b8da-0619f8945a4f'
+pnconfig.publish_key = 'pub-c-a3e23e4f-a8de-4725-9410-73836d348af4'
+
+pubnub = PubNub(pnconfig)
+
 
 @app.route('/index')
 def index():
@@ -32,6 +42,11 @@ def index():
         print "Email : " + email
         return flask.redirect("https://www.google.com?result_code=SUCCESS", code=302)
 
+
+def playVideo(channelnumber):
+    pubnub.publish().channel("b3ecda43fbe707f2").message("HELLO GOOGLE~"+channelnumber).sync()
+
+
 @app.route('/oauth2callback')
 def oauth2callback():
     flow = client.flow_from_clientsecrets(
@@ -48,6 +63,7 @@ def oauth2callback():
       flask.session['credentials'] = credentials.to_json()
       return flask.redirect(flask.url_for('index'))
 
+
 @app.route('/webhook', methods=['POST'])
 def webhook():
     req = flask.request.get_json(silent=True, force=True)
@@ -63,12 +79,14 @@ def webhook():
     r.headers['Content-Type'] = 'application/json'
     return r
 
+
 def makeWebhookResult(req):
     if req.get("result").get("action") == "play-action":
         result = req.get("result")
         parameters = result.get("parameters")
         channelnumber = parameters.get("channelNumber")
         speech = "The channel " + channelnumber + " starts to play"
+        playVideo(channelnumber)
     elif req.get("result").get("action") == "volume-action":
         result = req.get("result")
         parameters = result.get("parameters")
