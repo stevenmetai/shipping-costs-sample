@@ -51,14 +51,23 @@ def playVideo(channelnumber):
     pubnub.publish().channel("b3ecda43fbe707f2").message("HELLO GOOGLE~"+channelnumber).sync()
 
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
+    error = None
+    state = None
+    client_id = None
+    if flask.request.method == 'POST':
+        if flask.request.form['username'] != 'steven' or flask.request.form['password'] != '1234':
+            error = 'Invalid Credentials. Please try again.'
+        else:
+            print state
     state = flask.request.args.get('state')
     client_id = flask.request.args.get('client_id')
     response_type = flask.request.args.get('response_type')
     redirect_uri = flask.request.args.get('redirect_uri')
-    print state + " , "+ client_id + " , " + response_type + " , " + redirect_uri
-    return send_from_directory(filename='amazonoauth.html')
+    print state + " , "+ client_id + " , "
+    #+ response_type + " , " + redirect_uri
+    return send_from_directory(filename='amazonoauth.html', error=error)
 
 
 @app.route('/oauth2callback')
