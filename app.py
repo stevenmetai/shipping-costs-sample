@@ -7,12 +7,16 @@ import os
 import flask
 import httplib2
 from apiclient import discovery
+from flask import send_from_directory
 from oauth2client import client
 from pubnub.pnconfiguration import PNConfiguration
 from pubnub.pubnub import PubNub
 
+
+
+
 # Flask app should start in global layout
-app = flask.Flask(__name__)
+app = flask.Flask(__name__, static_url_path='')
 app.secret_key = 'super secret key'
 
 pnconfig = PNConfiguration()
@@ -45,6 +49,16 @@ def index():
 
 def playVideo(channelnumber):
     pubnub.publish().channel("b3ecda43fbe707f2").message("HELLO GOOGLE~"+channelnumber).sync()
+
+
+@app.route('/login')
+def login():
+    state = flask.request.get('state')
+    client_id = flask.request.get('client_id')
+    response_type = flask.request.get('response_type')
+    redirect_uri = flask.request.get('redirect_uri')
+    print state + " , "+ client_id + " , " + response_type + " , " + redirect_uri
+    return send_from_directory(filename='amazonoauth.html')
 
 
 @app.route('/oauth2callback')
@@ -109,9 +123,13 @@ def makeWebhookResult(req):
     }
 
 
+@app.route('/privacy')
+def privacy():
+    return "Privacy Page"
+
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
-
+    #context = ('server.key', 'server.crt')
     print "Starting app on port %d" % port
 
-    app.run(debug=True, port=port, host='0.0.0.0')
+    app.run(debug=True, port=port, host='127.0.0.1')
