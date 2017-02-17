@@ -67,7 +67,7 @@ def login():
     redirect_uri = flask.request.args.get('redirect_uri')
     print state + " , "+ client_id + " , "
     #+ response_type + " , " + redirect_uri
-    return send_from_directory(filename='amazonoauth.html')
+    return send_from_directory(directory='/', filename='amazonoauth.html', error=error)
 
 
 @app.route('/oauth2callback')
