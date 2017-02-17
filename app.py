@@ -16,7 +16,7 @@ from pubnub.pubnub import PubNub
 
 
 # Flask app should start in global layout
-app = flask.Flask(__name__, static_url_path='')
+app = flask.Flask(__name__, static_folder='')
 app.secret_key = 'super secret key'
 
 pnconfig = PNConfiguration()
@@ -67,7 +67,7 @@ def login():
     redirect_uri = flask.request.args.get('redirect_uri')
     print state + " , "+ client_id + " , "
     #+ response_type + " , " + redirect_uri
-    return send_from_directory(directory='/', filename='amazonoauth.html', error=error)
+    return send_from_directory(directory=app.static_folder, filename='amazonoauth.html', error=error)
 
 
 @app.route('/oauth2callback')
