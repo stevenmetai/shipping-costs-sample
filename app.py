@@ -53,10 +53,10 @@ def playVideo(channelnumber):
 
 @app.route('/login')
 def login():
-    state = flask.request.get('state')
-    client_id = flask.request.get('client_id')
-    response_type = flask.request.get('response_type')
-    redirect_uri = flask.request.get('redirect_uri')
+    state = flask.request.args.get('state')
+    client_id = flask.request.args.get('client_id')
+    response_type = flask.request.args.get('response_type')
+    redirect_uri = flask.request.args.get('redirect_uri')
     print state + " , "+ client_id + " , " + response_type + " , " + redirect_uri
     return send_from_directory(filename='amazonoauth.html')
 
