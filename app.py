@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
+import pycurl
 import urllib
 import json
 import os
+import StringIO
 
 import flask
 import httplib2
@@ -53,21 +55,41 @@ def playVideo(channelnumber):
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    error = None
-    state = None
-    client_id = None
-    if flask.request.method == 'POST':
-        if flask.request.form['username'] != 'steven' or flask.request.form['password'] != '1234':
-            error = 'Invalid Credentials. Please try again.'
-        else:
-            print state
-    state = flask.request.args.get('state')
-    client_id = flask.request.args.get('client_id')
-    response_type = flask.request.args.get('response_type')
-    redirect_uri = flask.request.args.get('redirect_uri')
-    print state + " , "+ client_id + " , "
-    #+ response_type + " , " + redirect_uri
     return send_from_directory(directory=app.static_folder, filename='amazonoauth.html')
+
+
+@app.route('/handle_login', methods=['GET', 'POST'])
+def handle_login():
+    access_token = flask.request.args.get('access_token')
+    b = StringIO.StringIO()
+
+    # verify that the access token belongs to us
+    c = pycurl.Curl()
+    c.setopt(pycurl.URL, "https://api.amazon.com/auth/o2/tokeninfo?access_token=" + urllib.quote_plus(access_token))
+    c.setopt(pycurl.SSL_VERIFYPEER, 1)
+    c.setopt(pycurl.WRITEFUNCTION, b.write)
+
+    c.perform()
+    d = json.loads(b.getvalue())
+
+    if d['aud'] != 'amzn1.application-oa2-client.5e9c7fb1640b44759e12682c130c5db0':
+        # the access token does not belong to us
+        raise BaseException("Invalid Token")
+
+    # exchange the access token for user profile
+    b = StringIO.StringIO()
+
+    c = pycurl.Curl()
+    c.setopt(pycurl.URL, "https://api.amazon.com/user/profile")
+    c.setopt(pycurl.HTTPHEADER, ["Authorization: bearer " + access_token])
+    c.setopt(pycurl.SSL_VERIFYPEER, 1)
+    c.setopt(pycurl.WRITEFUNCTION, b.write)
+
+    c.perform()
+    d = json.loads(b.getvalue())
+
+    print "%s %s %s" % (d['name'], d['email'], d['user_id'])
+    return send_from_directory(directory=app.static_folder, filename='handle_login.html')
 
 
 @app.route('/oauth2callback')
