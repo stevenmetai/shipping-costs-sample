@@ -54,9 +54,12 @@ def playVideo(channelnumber):
     pubnub.publish().channel("b3ecda43fbe707f2").message("HELLO GOOGLE~"+channelnumber).sync()
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def zero():
-    print flask.request
+    req = flask.request.get_json(silent=True, force=True)
+
+    print("Request:")
+    print(json.dumps(req, indent=4))
     return "HELLO"
 
 
