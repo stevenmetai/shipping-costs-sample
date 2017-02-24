@@ -27,7 +27,8 @@ pnconfig.subscribe_key = 'sub-c-79baf02c-29d0-11e5-b8da-0619f8945a4f'
 pnconfig.publish_key = 'pub-c-a3e23e4f-a8de-4725-9410-73836d348af4'
 
 pubnub = PubNub(pnconfig)
-
+state = None
+code = None
 
 @app.route('/index')
 def index():
@@ -53,8 +54,18 @@ def playVideo(channelnumber):
     pubnub.publish().channel("b3ecda43fbe707f2").message("HELLO GOOGLE~"+channelnumber).sync()
 
 
+@app.route('/')
+def zero():
+    print flask.request
+    return "HELLO"
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    global state
+    state = flask.request.args.get('state')
+    global code
+    code = flask.request.args.get('code')
     return send_from_directory(directory=app.static_folder, filename='amazonoauth.html')
 
 
