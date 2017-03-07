@@ -61,6 +61,7 @@ def channel():
 
 def playVideo(userId, channelnumber):
     message = json.dumps({'action': 'startPlayChannel', 'channel_no': channelnumber})
+    print message
     pubnub.publish().channel(userId).message(message).sync()
 
 
