@@ -50,6 +50,13 @@ def index():
         return flask.redirect("https://www.google.com?result_code=SUCCESS", code=302)
 
 
+@app.route('/channel')
+def channel():
+    channelNum = flask.request.args.get('num')
+    print("channel : "+channelNum)
+    playVideo(channelNum)
+    return "OK " + channelNum
+
 def playVideo(channelnumber):
     pubnub.publish().channel("b3ecda43fbe707f2").message("HELLO GOOGLE~"+channelnumber).sync()
 
