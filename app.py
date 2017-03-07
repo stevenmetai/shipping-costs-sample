@@ -59,7 +59,7 @@ def channel():
 
 
 def playVideo(userId, channelnumber):
-    print(channelnumber)
+    print(type(channelnumber))
     if channelnumber == 1:
         channelnumber = 4918
     elif channelnumber == 91:
