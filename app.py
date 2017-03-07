@@ -13,7 +13,6 @@ from flask import send_from_directory
 from oauth2client import client
 from pubnub.pnconfiguration import PNConfiguration
 from pubnub.pubnub import PubNub
-from array import array
 
 
 
@@ -60,10 +59,12 @@ def channel():
 
 
 def playVideo(userId, channelnumber):
+    print(channelnumber)
     if channelnumber == 1:
         channelnumber = 4918
     elif channelnumber == 91:
         channelnumber = 5033
+        print("code:" + channelnumber)
     message = '{"action": "startPlayChannel", "channel_no":'+ channelnumber +'}'
     j = json.loads(message)
     pubnub.publish().channel(userId).message(j).sync()
