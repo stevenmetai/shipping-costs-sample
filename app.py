@@ -53,12 +53,15 @@ def index():
 @app.route('/channel')
 def channel():
     channelNum = flask.request.args.get('num')
-    print("channel : "+channelNum)
-    playVideo(channelNum)
+    userId = flask.request.args.get('userId')
+    print("channel : "+channelNum + "  userId : " + userId)
+    playVideo(userId, channelNum)
     return "OK " + channelNum
 
-def playVideo(channelnumber):
-    pubnub.publish().channel("b3ecda43fbe707f2").message("HELLO GOOGLE~"+channelnumber).sync()
+
+def playVideo(userId, channelnumber):
+    message = json.dumps({'action': 'startPlayChannel', 'channel_no': channelnumber})
+    pubnub.publish().channel(userId).message(message).sync()
 
 
 @app.route('/', methods=['GET', 'POST'])
