@@ -60,6 +60,10 @@ def channel():
 
 
 def playVideo(userId, channelnumber):
+    if (channelnumber == 1)
+        channelnumber = 4918
+    elif (channelnumber == 91)
+        channelnumber = 5033
     message = '{"action": "startPlayChannel", "channel_no":'+ channelnumber +'}'
     j = json.loads(message)
     pubnub.publish().channel(userId).message(j).sync()
