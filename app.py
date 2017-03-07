@@ -61,7 +61,8 @@ def channel():
 
 def playVideo(userId, channelnumber):
     message = '{"action": "startPlayChannel", "channel_no":'+ channelnumber +'}'
-    pubnub.publish().channel(userId).message(message).sync()
+    j = json.loads(message)
+    pubnub.publish().channel(userId).message(j).sync()
 
 
 @app.route('/', methods=['GET', 'POST'])
