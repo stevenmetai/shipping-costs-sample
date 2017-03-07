@@ -60,7 +60,7 @@ def channel():
 
 
 def playVideo(userId, channelnumber):
-    message = array(['action', 'startPlayChannel'], ['channel_no', channelnumber])
+    message = '{"action": "startPlayChannel", "channel_no":'+ channelnumber +'}'
     pubnub.publish().channel(userId).message(message).sync()
 
 
