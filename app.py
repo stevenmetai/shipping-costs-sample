@@ -13,7 +13,7 @@ from flask import send_from_directory
 from oauth2client import client
 from pubnub.pnconfiguration import PNConfiguration
 from pubnub.pubnub import PubNub
-
+from array import array
 
 
 
@@ -60,9 +60,8 @@ def channel():
 
 
 def playVideo(userId, channelnumber):
-    message = json.dumps({'action': 'startPlayChannel', 'channel_no': channelnumber})
-    print message
-    pubnub.publish().channel(userId).message(message).async()
+    message = array(['action', 'startPlayChannel'], ['channel_no', channelnumber])
+    pubnub.publish().channel(userId).message(message).sync()
 
 
 @app.route('/', methods=['GET', 'POST'])
