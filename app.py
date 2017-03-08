@@ -49,7 +49,7 @@ def index():
         return flask.redirect("https://www.google.com?result_code=SUCCESS", code=302)
 
 
-@app.route('/playchannel', method=['POST'])
+@app.route('/playchannel', methods=['POST'])
 def channel():
     req = flask.request.get_json(slient=True, force=True)
     channelNum = req['num']
