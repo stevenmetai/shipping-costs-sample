@@ -51,7 +51,7 @@ def index():
 
 @app.route('/playchannel', methods=['POST'])
 def channel():
-    req = flask.request.get_json(slient=True, force=True)
+    req = flask.request.get_json(silent=True, force=True)
     channelNum = req['num']
     userId = req['userId']
     print("channel : "+channelNum + "  userId : " + userId)
