@@ -189,7 +189,7 @@ def makeWebhookResult(req):
 @app.route('/privacy')
 def privacy():
     return "Privacy Page"
-
+ 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
     #context = ('server.key', 'server.crt')
