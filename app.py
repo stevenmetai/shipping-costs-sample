@@ -57,7 +57,7 @@ def channel():
     print type(channelNum)
     print type(userId)
     #print("channel : "+channelNum + "  userId : " + userId)
-    playVideo(userId, channelNum)
+    playVideo(userId, str(channelNum))
     return "OK " + channelNum
 
 
