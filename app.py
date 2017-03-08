@@ -52,12 +52,12 @@ def index():
 @app.route('/playchannel', methods=['POST'])
 def channel():
     req = flask.request.get_json(silent=True, force=True)
-    channelNum = req['num']
+    channelNum = str(req['num'])
     userId = req['userId']
     print type(channelNum)
     print type(userId)
     #print("channel : "+channelNum + "  userId : " + userId)
-    playVideo(userId, str(channelNum))
+    playVideo(userId, channelNum)
     return "OK " + channelNum
 
 
