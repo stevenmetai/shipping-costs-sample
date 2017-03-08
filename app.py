@@ -52,22 +52,22 @@ def index():
 @app.route('/playchannel', methods=['POST'])
 def channel():
     req = flask.request.get_json(silent=True, force=True)
-    channelNum = str(req['num'])
+    channelNum = req['num']
     userId = req['userId']
     print type(channelNum)
     print type(userId)
     #print("channel : "+channelNum + "  userId : " + userId)
     playVideo(userId, channelNum)
-    return "OK " + channelNum
+    return "OK "
 
 
 def playVideo(userId, channelnumber):
-    if channelnumber == "1":
-        channelnumber = "4918"
-    elif channelnumber == "91":
-        channelnumber = "5033"
-        print("code:" + channelnumber)
-    message = '{"action": "startPlayChannel", "channel_code":'+ channelnumber +'}'
+    if channelnumber == 1:
+        channelnumber = 4918
+    elif channelnumber == 91:
+        channelnumber = 5033
+        #print("code:" + channelnumber)
+    message = '{"action": "startPlayChannel", "channel_code":'+ str(channelnumber) +'}'
     j = json.loads(message)
     pubnub.publish().channel(userId).message(j).sync()
 
