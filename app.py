@@ -49,10 +49,11 @@ def index():
         return flask.redirect("https://www.google.com?result_code=SUCCESS", code=302)
 
 
-@app.route('/channel')
+@app.route('/playchannel', method=['POST'])
 def channel():
-    channelNum = flask.request.args.get('num')
-    userId = flask.request.args.get('userId')
+    req = flask.request.get_json(slient=True, force=True)
+    channelNum = req['num']
+    userId = req['userId']
     print("channel : "+channelNum + "  userId : " + userId)
     playVideo(userId, channelNum)
     return "OK " + channelNum
