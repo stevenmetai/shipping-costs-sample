@@ -54,7 +54,9 @@ def channel():
     req = flask.request.get_json(silent=True, force=True)
     channelNum = req['num']
     userId = req['userId']
-    print("channel : "+channelNum + "  userId : " + userId)
+    print type(channelNum)
+    print type(userId)
+    #print("channel : "+channelNum + "  userId : " + userId)
     playVideo(userId, channelNum)
     return "OK " + channelNum
 
